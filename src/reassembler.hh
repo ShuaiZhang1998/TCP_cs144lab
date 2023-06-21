@@ -2,10 +2,25 @@
 
 #include "byte_stream.hh"
 
+#include <map>
+#include <set>
 #include <string>
-
 class Reassembler
 {
+protected:
+  //用来进行segment组装的map
+  std::map<uint64_t, std::string> buffer = {};
+  //泪目
+  std::map<uint64_t, uint64_t> buffer_p = {};
+  //组装缓冲区的大小
+  uint64_t buffer_size = 0;
+  //永远指向已经正确接受的字节流末尾
+  uint64_t p = 0;
+  //泪目
+  uint64_t end_p = 0;
+  //标记是否接收到了最末尾的segment
+  bool tag_end = false;
+ 
 public:
   /*
    * Insert a new substring to be reassembled into a ByteStream.

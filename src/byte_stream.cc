@@ -1,77 +1,87 @@
-#include <stdexcept>
-
 #include "byte_stream.hh"
+#include <algorithm>
+#include <stdexcept>
+#include <string>
 
 using namespace std;
 
 ByteStream::ByteStream( uint64_t capacity ) : capacity_( capacity ) {}
-
 void Writer::push( string data )
 {
-  // Your code here.
-  (void)data;
+  if ( capacity_ == 0 )
+    return;
+  uint64_t num_pushed_ = min( data.size(), capacity_ );
+
+  string temp = data.substr( 0, num_pushed_ );
+  buffer_ += temp;
+  capacity_ = capacity_ - num_pushed_;
+  num_pushed += num_pushed_;
 }
 
 void Writer::close()
 {
-  // Your code here.
+  closed_ = true;
 }
 
 void Writer::set_error()
 {
-  // Your code here.
+  error_ = true;
 }
 
 bool Writer::is_closed() const
 {
   // Your code here.
-  return {};
+  if ( closed_ )
+    return true;
+  return false;
 }
 
 uint64_t Writer::available_capacity() const
 {
-  // Your code here.
-  return {};
+  return { capacity_ };
 }
 
 uint64_t Writer::bytes_pushed() const
 {
-  // Your code here.
-  return {};
+  return { num_pushed };
 }
 
 string_view Reader::peek() const
 {
-  // Your code here.
-  return {};
+  return buffer_;
 }
 
 bool Reader::is_finished() const
 {
-  // Your code here.
-  return {};
+  if ( closed_ && buffer_.size() == 0 )
+    return true;
+  return false;
 }
 
 bool Reader::has_error() const
 {
-  // Your code here.
-  return {};
+  if ( !error_ )
+    return false;
+  return true;
 }
 
 void Reader::pop( uint64_t len )
 {
   // Your code here.
-  (void)len;
+  uint64_t maxx_pop = min( len, uint64_t( buffer_.size() ) );
+  buffer_ = buffer_.substr( maxx_pop, buffer_.size() );
+  capacity_ += maxx_pop;
+  num_poped += maxx_pop;
 }
 
 uint64_t Reader::bytes_buffered() const
 {
   // Your code here.
-  return {};
+  return buffer_.size();
 }
 
 uint64_t Reader::bytes_popped() const
 {
   // Your code here.
-  return {};
+  return { num_poped };
 }

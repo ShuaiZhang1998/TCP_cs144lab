@@ -12,9 +12,17 @@ class ByteStream
 {
 protected:
   uint64_t capacity_;
+  uint64_t num_pushed = 0;
+  uint64_t num_poped = 0;
   // Please add any additional state to the ByteStream here, and not to the Writer and Reader interfaces.
+  bool error_ = false;
+  bool closed_ = false;
+  bool finshed_ = false;
+  std::string buffer_ = "";
+  std::queue<char> buffer__ = {};
 
 public:
+  // explicit ByteStream(uint64_t capacity) : capacity_{capacity}, buffer__{} {}
   explicit ByteStream( uint64_t capacity );
 
   // Helper functions (provided) to access the ByteStream's Reader and Writer interfaces
